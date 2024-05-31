@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>employee data</title>
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+    <style>
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            margin: 2px;
+            padding: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row">
+        <!--col1-->
+        <div class="col-md-6 ">
+            <h3>Add new employee</h3>
+            {% if msg %}
+            <div class="alert alert-warning">{{msg}}</div>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <table>
+                    <tr>
+                        <td>First Name:</td>
+                        <td><input type="text" name="fname"></td>
+                    </tr>
+                    <tr>
+                        <td>Last Name:</td>
+                        <td><input type="text" name="lname"></td>
+                    </tr>
+                    <tr>
+                        <td>Age:</td>
+                        <td><input type="number" name="age"></td>
+                    </tr>
+                    <tr>
+                        <td>Address:</td>
+                        <td><input type="text" name="addr" style="height:5ch;"></td>
+                    </tr>
+                </table>
+                <button type="submit">Add now!</button>
+            </form>
+        </div>
+        <!--col2 lookup-->
+        <div class="col-md-6">
+            <h3>Employee Lookup</h3>
+            <button><a href="/display">Display All Employee
+                    data</a></button><br>
+            <form action="/search" method="post">
+                {% csrf_token %}
+                <select name="category">
+                    <option value="empname">Employee Name</option>
+                    <option value="empage">Employee Age</option>
+                </select>
+                <select name="options">
+                    <option value="startswith">starts with</option>
+                    <option value="contains">contains</option>
+                    <option value="lte">age less than</option>
+                </select>
+                <input type="text" name="search_string" value="">
+                <button type="submit">search</button>
+            </form>
+            <div>
+                {% if data %}
+                <table>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Age</th>
+                        <th>Address</th>
+                    </tr>
+                    {% for x in data %}
+                    <tr>
+                        <td>{{x.fname}}</td>
+                        <td>{{x.lname}}</td>
+                        <td>{{x.age}}</td>
+                        <td>{{x.address}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% endif %}
+                {% if errmsg %}
+                <div class="alert alert-warning">{{errmsg}}</div>
+                {% endif %}
+                {% if error %}
+                <div class="alert alert-danger">{{error}}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+</body>
+
+</html>
